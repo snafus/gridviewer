@@ -1,0 +1,69 @@
+<!doctype html>
+<head>
+    <title>My Webpage</title>
+
+
+</head>
+
+<body>
+
+   
+<h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+<div class="message_holder"></div>
+
+<form action="" method="POST">
+    <input type="text" class="username" placeholder="User Name"/>
+    <input type="text" class="message" placeholder="Messages"/>
+    <input type="submit"/>
+  </form>
+
+
+
+    <ul id="sites">
+    {% for item in sites %}
+
+        <li><a href="{{ item.url_cric }}">{{ item.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+    <h1>My Webpage</h1>
+    {{ a_variable }}
+
+    {# a comment #}
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    //var socket = io();
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'})
+    
+    var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          let user_input = $( 'input.message' ).val()
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input
+          } )
+          $( 'input.message' ).val( 'dog' ).focus()
+        } )
+        socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+    } ) 
+    });
+    $(document).ready(function(){
+  $("li").mouseenter(function(){
+    $(this).hide();
+  });
+});
+</script>
+
+</body>
+</html>
